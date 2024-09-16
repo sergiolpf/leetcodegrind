@@ -1,0 +1,68 @@
+package main
+
+import (
+	"container/heap"
+	"fmt"
+	"math"
+)
+
+func main() {
+	fmt.Println(kClosest([][]int{
+		{3, 3},
+		{5, -1},
+		{-2, 4},
+	}, 2))
+}
+
+type Item struct {
+	ponto []int
+	dist  float64
+}
+
+type coordenadasStack []*Item
+
+func (h coordenadasStack) Len() int           { return len(h) }
+func (h coordenadasStack) Less(i, j int) bool { return h[i].dist < h[j].dist }
+func (h coordenadasStack) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *coordenadasStack) Push(x any) {
+	item := &Item{
+		ponto: x.([]int),
+		dist:  math.Sqrt(math.Pow(float64(x.([]int)[0]), 2) + math.Pow(float64(x.([]int)[1]), 2)),
+	}
+	*h = append(*h, item)
+}
+
+func (h *coordenadasStack) Pop() any {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x.ponto
+}
+
+/*
+Complexidade
+Tempo: O(NLogK) - a parte do sort/push/pop eh logK e como fazemos isso n vezes, logo NLogK
+Espaco: O(n)
+*/
+func kClosest(points [][]int, k int) [][]int {
+
+	sortedByDistance := &coordenadasStack{}
+
+	heap.Init(sortedByDistance)
+
+	for _, v := range points {
+		heap.Push(sortedByDistance, v)
+	}
+
+	response := [][]int{}
+
+	for i := 0; i < k; i++ {
+		res := heap.Pop(sortedByDistance).([]int)
+		response = append(response, res)
+
+	}
+
+	return response
+}
