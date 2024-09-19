@@ -10,6 +10,11 @@ func main() {
 	fmt.Println(exist(board, "AB"))
 }
 
+/*
+Complexidade
+tempo: O(de muito) - (m * n)**2 - precisamos traversar a matrix entao m*n mas tambem pra cada letra achada precisamos ir os adjacentes entao seria em torno de m*n tambem.
+Espaco: O(k) - tamanho da palavra
+*/
 func exist(board [][]byte, word string) bool {
 	m := len(board)
 	n := len(board[0])
