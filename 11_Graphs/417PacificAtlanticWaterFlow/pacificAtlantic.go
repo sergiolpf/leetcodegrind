@@ -45,7 +45,6 @@ func pacificAtlantic(heights [][]int) [][]int {
 			return
 		}
 
-		fmt.Printf("visited[%v][%v]: %v\n", i, j, visited[i][j])
 		if visited[i][j] {
 			return
 		}
