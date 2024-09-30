@@ -10,6 +10,10 @@ func main() {
 	fmt.Println(coinChange([]int{2}, 3))
 }
 
+/*
+Tempo: O(amount*coins)
+Espaco: O(amount)
+*/
 func coinChange(coins []int, amount int) int {
 
 	sort.Ints(coins)
@@ -24,7 +28,7 @@ func coinChange(coins []int, amount int) int {
 			return value
 		}
 
-		minn := math.MaxInt64
+		minn := math.MaxInt32
 
 		for i := 0; i < len(coins); i++ {
 			diff := left - coins[i]
@@ -32,12 +36,7 @@ func coinChange(coins []int, amount int) int {
 				break
 			}
 
-			minCoinDiff := minCoins(diff)
-			if minCoinDiff == math.MaxInt64 {
-				minn = min(minn, minCoinDiff)
-			} else {
-				minn = min(minn, minCoinDiff+1)
-			}
+			minn = min(minn, minCoins(diff)+1)
 		}
 
 		memo[left] = minn
@@ -46,10 +45,47 @@ func coinChange(coins []int, amount int) int {
 
 	result := minCoins(amount)
 
-	if result < math.MaxInt64 {
+	if result < math.MaxInt32 {
 		return result
 	}
 
 	return -1
+
+}
+
+/*
+Tempo: O(amount*coins)
+Espaco: O(amount)
+*/
+func coinChange2(coins []int, amount int) int {
+
+	sort.Ints(coins)
+
+	dp := make([]int, amount+1)
+	// for i := 0; i < amount+1; i++ {
+	// 	dp[i] = math.MaxInt64
+	// }
+	dp[0] = 0
+
+	for i := 1; i < amount+1; i++ {
+		dp[i] = math.MaxInt32
+
+		for _, coin := range coins {
+			if coin > i {
+				break
+			}
+
+			if dp[i-coin] != math.MaxInt32 {
+				dp[i] = min(dp[i-coin]+1, dp[i])
+			}
+
+		}
+	}
+
+	if dp[amount] == math.MaxInt32 {
+		return -1
+	}
+
+	return dp[amount]
 
 }
